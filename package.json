@@ -1,16 +1,25 @@
 {
-  "name": "messenger",
+  "name": "iris-messenger",
   "version": "1.0.0",
   "description": "Online instant messaging service",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
+  "author": "Atikhun Orisoon <xvista@xvista.in.th> (http://xvista.in.th/)",
+  "contributors": [
+    "Nattapong Ousirimaneechai",
+    "Tanawat Kaochalongkeang",
+    "Wipavanee Vatcharadejsakul"
+  ],
   "license": "ISC",
   "dependencies": {
     "express": "^4.13.4",
     "pug": "^2.0.0-alpha3",
     "socket.io": "^1.4.5"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/xvista/iris-messenger.git"
   }
 }
