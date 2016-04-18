@@ -15,6 +15,9 @@ if (app.get('env') == 'development') {
     app.locals.pretty = true;
 }
 
-app.get('/', function (req, res) {
-    res.render('index');
+var fs = require ('fs');
+fs.readdirSync('controllers').forEach(function(file) {
+  if ( file[0] == '.' ) return;
+  var routeName = file.substr(0, file.indexOf('.'));
+  require('./controllers/' + routeName)(app);
 });
