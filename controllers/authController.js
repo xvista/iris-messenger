@@ -9,7 +9,7 @@ var isAuthenticated = function (req, res, next) {
 }
 
 module.exports = function(app, passport){
-
+	
 	/* GET login page. */
 	app.get('/login', function(req, res) {
     	// Display the Login page with any flash message, if any
@@ -19,7 +19,7 @@ module.exports = function(app, passport){
 	/* Handle Login POST */
 	app.post('/login', passport.authenticate('login', {
 		successRedirect: '/home',
-		failureRedirect: '/',
+		failureRedirect: '/login',
 		failureFlash : true  
 	}));
 

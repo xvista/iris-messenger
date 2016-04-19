@@ -8,7 +8,6 @@ module.exports = function(passport){
             passReqToCallback : true // allows us to pass back the entire request to the callback
         },
         function(req, username, password, done) {
-
             findOrCreateUser = function(){
                 // find a user in Mongo with provided username
                 User.findOne({ 'username' :  username }, function(err, user) {
@@ -27,11 +26,10 @@ module.exports = function(passport){
                         var newUser = new User();
 
                         // set the user's local credentials
+                        console.log(username+" "+password+" "+req.param('name'));
                         newUser.username = username;
                         newUser.password = createHash(password);
-                        newUser.email = req.param('email');
-                        newUser.firstName = req.param('firstName');
-                        newUser.lastName = req.param('lastName');
+                        newUser.name = req.param('name');
 
                         // save the user
                         newUser.save(function(err) {
