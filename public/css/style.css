@@ -1,14 +1,31 @@
+body {
+    height: 100%;
+}
+
+.ui-title {
+    font-size: 1.25em;
+    text-align: center;
+    padding: 15px;
+    border-bottom: 1px solid #eee;
+}
+
+.ui-title > span.icon-iris {
+    font-size: 0.85em;
+}
+
+/*
+  ========== SIDEBAR ===============  
+*/
+
 .sidebar {
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    left: 0;
+    height: 100%;
+    float: left;
     z-index: 1000;
     display: block;
     padding: 20px;
     overflow-x: hidden;
     overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
-    background-color: #f5f5f5;
+    background-color: #fff;
     border-right: 1px solid #eee;
 }
 
@@ -16,6 +33,9 @@
     margin-right: -21px; /* 20px padding + 1px border */
     margin-bottom: 20px;
     margin-left: -20px;
+}
+.sidebar-list > li {
+    border-bottom: 1px solid #eee;
 }
 .sidebar-list > li > a {
     padding-right: 20px;
@@ -26,4 +46,106 @@
 .sidebar-list > .active > a:focus {
     color: #fff;
     background-color: #428bca;
+}
+
+.sidebar-list > li > a > .group-name {
+    display: block;
+    font-weight: bold;
+}
+.sidebar-list > li > a > .group-recent {
+    display: block;
+    font-size: small;
+}
+
+.sidebar-title {
+    display: block;
+    text-align: center;
+}
+
+/*
+  ========== MESSAGE BOX ===============  
+*/
+
+.message-box {
+    height: 100%;
+    float: right;
+    z-index: 1000;
+    display: block;
+    padding: 20px;
+    overflow-x: hidden;
+    overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
+    background-color: #fff;
+}
+
+.message-box-title {
+    border-bottom: 1px solid #eee;
+}
+
+.message {
+    margin-top: 20px;
+}
+
+.message > img.message-picture {
+    width: 50px;
+    height: 50px;
+    background: #fff;
+    border: 1px solid #eee;
+    border-radius: 25px;
+    background-size: cover;
+    background-position: center center;
+}
+
+.message > .message-sender {
+    font-size: small;
+    color: #888;
+    display: block;
+    margin-bottom: 8px;
+}
+
+.message-me {
+    text-align: right;
+}
+
+.message-me > img.message-picture {
+    float: right;
+    margin-left: 10px;
+}
+
+.message-me > .message-text {
+    color: #fff;
+    background: #666;
+    padding: 8px 10px;
+    border-radius: 15px;
+}
+
+.message-friend {
+    text-align: left;
+}
+
+.message-friend > img.message-picture {
+    float: left;
+    margin-right: 10px;
+}
+
+.message-friend > .message-text {
+    color: #fff;
+    background: #aaa;
+    padding: 8px 10px;
+    border-radius: 15px;
+}
+
+/*
+  ========== PANEL ===============  
+*/
+
+.panel {
+    height: 100%;
+    float: left;
+    z-index: 1000;
+    display: flex;
+    padding: 20px;
+    overflow-x: hidden;
+    overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
+    background-color: #fff;
+    border-right: 1px solid #eee;
 }
