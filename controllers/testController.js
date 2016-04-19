@@ -123,7 +123,6 @@ module.exports = function (app){
                             if(err){
                                 res.send(err);
                             }
-                            console.log(user.username);
                             message.user = user;
                             resolve();
                         });

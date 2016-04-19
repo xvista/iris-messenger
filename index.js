@@ -2,8 +2,16 @@ var express = require('express');
 var app = express();
 var path = require('path');
 var port = 8081;
+
 var mongoose = require('mongoose');
 mongoose.connect("mongodb://localhost:27017/irisDB");
+
+// Configuring Passport
+var passport = require('passport');
+var expressSession = require('express-session');
+app.use(expressSession({secret: 'mySecretKey'}));
+app.use(passport.initialize());
+app.use(passport.session());
 
 var server = app.listen(port, function () {
     console.log('Listening on port ' + port);
