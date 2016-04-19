@@ -117,13 +117,27 @@ module.exports = function (app){
                 if(err){
                     res.send(err);
                 }
-                group.messages = messages;
-                User.find( { '_id': { $in: group.users } }, {username:1,_id:0}, function(err, users){
-                    if(err){
-                        res.send(err);
-                    }
-                    group.users = users;
-                    res.send(group);
+                var promises = messages.map(function(message){
+                    return new Promise(function(resolve, reject){
+                        User.findById( message.user, function(err, user){
+                            if(err){
+                                res.send(err);
+                            }
+                            console.log(user.username);
+                            message.user = user;
+                            resolve();
+                        });
+                    });
+                });
+                Promise.all(promises).then(function(){
+                    group.messages = messages;
+                    User.find( { '_id': { $in: group.users } }, {username:1,_id:0}, function(err, users){
+                        if(err){
+                            res.send(err);
+                        }
+                        group.users = users;
+                        res.send(group);
+                    }); 
                 });
             });
         });
