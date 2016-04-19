@@ -6,16 +6,26 @@ var port = 8081;
 var mongoose = require('mongoose');
 mongoose.connect("mongodb://localhost:27017/irisDB");
 
-// Configuring Passport
-var passport = require('passport');
-var expressSession = require('express-session');
-app.use(expressSession({secret: 'mySecretKey'}));
-app.use(passport.initialize());
-app.use(passport.session());
-
 var server = app.listen(port, function () {
     console.log('Listening on port ' + port);
 });
+
+// Configuring Passport
+var passport = require('passport');
+var expressSession = require('express-session');
+// TODO - Why Do we need this key ?
+app.use(expressSession({secret: 'mySecretKey', resave: true, saveUninitialized: true}));
+app.use(passport.initialize());
+app.use(passport.session());
+
+ // Using the flash middleware provided by connect-flash to store messages in session
+ // and displaying in templates
+var flash = require('connect-flash');
+app.use(flash());
+
+// Initialize Passport
+var initPassport = require('./passport/init');
+initPassport(passport);
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
@@ -29,5 +39,5 @@ var fs = require ('fs');
 fs.readdirSync('controllers').forEach(function(file) {
   if ( file[0] == '.' ) return;
   var routeName = file.substr(0, file.indexOf('.'));
-  require('./controllers/' + routeName)(app);
+  require('./controllers/' + routeName)(app, passport);
 });

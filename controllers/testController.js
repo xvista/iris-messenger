@@ -1,7 +1,7 @@
 var User = require('../models/user');
 var Group = require('../models/group');
 var Message = require('../models/message');
-module.exports = function (app){
+module.exports = function (app, passport){
     app.get('/test/create/user/:username/:password/:name', function (req, res) {
         User.findOne({ 'username': req.params.username }, function (err,user) {
             if(err){
