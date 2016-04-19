@@ -2,6 +2,8 @@ var express = require('express');
 var app = express();
 var path = require('path');
 var port = 8081;
+var mongoose = require('mongoose');
+mongoose.connect("mongodb://localhost:27017/irisDB");
 
 var server = app.listen(port, function () {
     console.log('Listening on port ' + port);
@@ -15,6 +17,9 @@ if (app.get('env') == 'development') {
     app.locals.pretty = true;
 }
 
-app.get('/', function (req, res) {
-    res.render('ui');
+var fs = require ('fs');
+fs.readdirSync('controllers').forEach(function(file) {
+  if ( file[0] == '.' ) return;
+  var routeName = file.substr(0, file.indexOf('.'));
+  require('./controllers/' + routeName)(app);
 });
