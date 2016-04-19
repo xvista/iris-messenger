@@ -1,15 +1,16 @@
 // grab the things we need
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
+var timestamps = require('mongoose-timestamp');
 
 // create a schema
 var userSchema = new Schema({
   username: { type: String, required: true, unique: true },
   password: { type: String, required: true },
-  name: String,
-  created_at: Date,
-  updated_at: Date
-});
+  name: String
+},{ collection: "users" });
+
+userSchema.plugin(timestamps);
 
 // the schema is useless so far
 // we need to create a model using it
