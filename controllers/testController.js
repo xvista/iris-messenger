@@ -1,6 +1,8 @@
 var User = require('../models/user');
 var Group = require('../models/group');
 var Message = require('../models/message');
+var express = require('express');
+var router = express.Router();
 module.exports = function (app, passport){
     app.get('/test/create/user/:username/:password/:name', function (req, res) {
         User.findOne({ 'username': req.params.username }, function (err,user) {
@@ -141,4 +143,5 @@ module.exports = function (app, passport){
             });
         });
     });
+    return router;
 }

@@ -23,6 +23,10 @@ app.use(passport.session());
 var flash = require('connect-flash');
 app.use(flash());
 
+var bodyParser = require('body-parser');
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+
 // Initialize Passport
 var initPassport = require('./passport/init');
 initPassport(passport);
@@ -35,9 +39,14 @@ if (app.get('env') == 'development') {
     app.locals.pretty = true;
 }
 
+// var routes = require('./controllers/authController')(passport);
+// app.use('/', routes);
 var fs = require ('fs');
 fs.readdirSync('controllers').forEach(function(file) {
   if ( file[0] == '.' ) return;
   var routeName = file.substr(0, file.indexOf('.'));
-  require('./controllers/' + routeName)(app, passport);
+  var routes = require('./controllers/' + routeName)(app, passport);
+  app.use('/', routes);
 });
+
+module.exports = app;
