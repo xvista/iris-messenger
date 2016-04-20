@@ -7,8 +7,56 @@ html
         link(rel="stylesheet", href="css/style.css")
     body
         div.container-fluid
+            div.row.ui-title
+                span(class="glyphicon glyphicon-comment icon-iris")
+                |  Iris Messenger
             div.row
+                div.col-md-3.panel
                 div.col-md-3.sidebar
                     ul.nav.sidebar-list
+                        li.ui-title.sidebar-title Conversations
                         li
-                            a(href="#") hi
+                            a(href="#")
+                                span.group-name Group Name
+                                span.group-recent Recent Message
+                        li
+                            a(href="#")
+                                span.group-name Group Name
+                                span.group-recent Recent Message
+                        li
+                            a(href="#")
+                                span.group-name Group Name
+                                span.group-recent Recent Message
+                        li
+                            a(href="#")
+                                span.group-name Group Name
+                                span.group-recent Recent Message
+                div.col-md-6.message-box
+                    div.ui-title.message-box-title คุนชาeตู่za
+                    div.message-textbox
+                    div.message.message-friend
+                        img.message-picture(style="background-image:url('http://www.newsplus.co.th/images/2014/12/419403585.jpg')")
+                        span.message-sender คุนชาeตู่za
+                        span.message-text อะไรของมึงวะปั๊ดโธ่
+                    div.message.message-me
+                        img.message-picture
+                        span.message-sender Me
+                        span.message-text อูย
+                    div.message.message-me
+                        img.message-picture
+                        span.message-sender Me
+                        span.message-text กลัวแล้วพี่
+                    div.message.message-friend
+                        img.message-picture(style="background-image:url('http://www.newsplus.co.th/images/2014/12/419403585.jpg')")
+                        span.message-sender คุนชาeตู่za
+                        span.message-text ลงไปซื้อมาม่าผัดได้แล้ว
+                    div.message.message-friend
+                        img.message-picture(style="background-image:url('http://www.newsplus.co.th/images/2014/12/419403585.jpg')")
+                        span.message-sender คุนชาeตู่za
+                        span.message-text หิว
+                    div.message.message-me
+                        img.message-picture
+                        span.message-sender Me
+                        span.message-text ครับ
+        script(src="js/jquery.min.js")
+        script(src="js/socket.io.js")
