@@ -10,6 +10,13 @@ var server = app.listen(port, function () {
     console.log('Listening on port ' + port);
 });
 
+var io = require('socket.io').listen(server);
+io.on('connection',function(socket){
+    socket.on('chat', function(message) {
+        io.emit('chat', message);
+    });
+});
+
 // Configuring Passport
 var passport = require('passport');
 var expressSession = require('express-session');

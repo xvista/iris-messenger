@@ -1,0 +1,26 @@
+doctype html
+html
+    head
+        title Realtime Chat using Node.js and Socket.IO
+        meta(name='viewport', content="initial-scale=1")
+        link(rel='stylesheet', href='css/chat.css')
+    body
+        div.box.box--container
+            div.box.box--chat
+                ul#chat-history
+                form#chat-form(action="")
+                    input.box(type="text", id="chat-message", autocomplete="off", placeholder="Enter message here...")
+script(src="https://cdn.socket.io/socket.io-1.3.3.js")
+script(src="https://code.jquery.com/jquery-2.1.3.min.js")
+script.
+    var socket = io();
+    // เมื่อ form ถูก submit ให้ทำอะไร? 
+    $('#chat-form').submit(function() {
+        // ส่งข้อความที่พิมพ์มาไปยัง server ผ่านทางท่อชื่อ "chat"
+        socket.emit('chat', $('#chat-message').val());
+        return false;
+    });
+    socket.on('chat', function(message) {
+        // แสดงผลข้อความที่ได้มาออกมาทางหน้าจอ
+        $('#chat-history').append($('<li class="message">').text(message));
+    });
