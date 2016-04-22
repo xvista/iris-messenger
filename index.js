@@ -4,6 +4,8 @@ var path = require('path');
 var port = 8081;
 
 var mongoose = require('mongoose');
+var Message = require('./models/message.js');
+
 mongoose.connect("mongodb://localhost:27017/irisDB");
 
 var server = app.listen(port, function () {
@@ -14,6 +16,10 @@ var io = require('socket.io').listen(server);
 io.on('connection',function(socket){
     socket.on('chat', function(message) {
         io.emit('chat', message);
+        //save here
+        // var text = new message(); 
+    	console.log("MESSAGE IS HERE");
+        console.dir(message);
     });
 });
 
@@ -55,5 +61,7 @@ fs.readdirSync('controllers').forEach(function(file) {
   var routes = require('./controllers/' + routeName)(app, passport);
   app.use('/', routes);
 });
+
+
 
 module.exports = app;

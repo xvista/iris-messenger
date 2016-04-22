@@ -48,6 +48,9 @@ module.exports = function(app, passport){
 		req.logout();
 		res.redirect('/');
 	});
+
+	
+
 	
 	return router;
 }

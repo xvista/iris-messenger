@@ -10,4 +10,16 @@ block content
 							ul.user-details
 								li Username ---> #{user.username}
 								li name    ---> #{user.name}
+						
 						a(href='/signout', class='text-center new-account') Sign Out
+		div.row
+			div.col-sm-6.col-md-4.col-md-offset-4
+				h1.text-center.login-title
+					a(href='/chat', class='text-center new-account') chat
+		div.row
+			div.col-sm-6.col-md-4.col-md-offset-4
+				h1.text-center.login-title 
+					form(class='form-inline', action='/create/group', method='POST')
+						input(type='text', name='new_group', class='form-control', placeholder='Create New Group...')
+						input(type='hidden', name='user_name', value="#{user.name}")
+						button(class='btn btn-primary', type='submit') Create

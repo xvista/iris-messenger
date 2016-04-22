@@ -70,7 +70,7 @@ html
             // เมื่อ form ถูก submit ให้ทำอะไร? 
             $('#chat-form').submit(function() {
                 // ส่งข้อความที่พิมพ์มาไปยัง server ผ่านทางท่อชื่อ "chat"
-                socket.emit('chat', $('#chat-message').val());
+                socket.emit('chat', {"message":$('#chat-message').val(),"kry":"kor"});
                 $('#chat-message').val('').focus();
                 return false;
             });
