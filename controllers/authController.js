@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+var Group = require('../models/group');
 
 var isAuthenticated = function (req, res, next) {
 	// if user is authenticated in the session, call the next() to call the next request handler 
@@ -40,7 +41,14 @@ module.exports = function(app, passport){
 
 	/* GET Home Page */
 	router.get('/home', isAuthenticated, function(req, res){
-		res.render('home', { user: req.user });
+		Group.find(function(err,group){
+			if(err){
+				res.send(err);
+			}
+
+			console.log(group+' >>><<< ');
+			res.render('home',{user:req.user, group_name:group});	
+		});
 	});
 
 	/* Handle Logout */

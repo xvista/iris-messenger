@@ -21,5 +21,9 @@ block content
 				h1.text-center.login-title 
 					form(class='form-inline', action='/create/group', method='POST')
 						input(type='text', name='new_group', class='form-control', placeholder='Create New Group...')
-						input(type='hidden', name='user_name', value="#{user.name}")
 						button(class='btn btn-primary', type='submit') Create
+		ul
+			each link in group_name
+				li 
+					a(href='/chat/'+link.name) #{link.name}
+			

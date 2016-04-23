@@ -7,12 +7,24 @@ module.exports = function (app, passport){
     app.get('/', function (req, res) {
         res.render('ui');
     });
-
+    //join group
     router.get('/chat/:group_name', function(req, res){
-		res.render('chat',{user:req.user,group:req.params.group_name});
+        Group.findOne({'name':req.params.group_name},function(err,group){
+            if(err){
+                res.send(err);
+            }
+            if(group){
+                res.render('chat',{user:req.user.username,group:req.params.group_name,group_message:group.messages});
+            }
+            else{
+                res.send("The group is not exist.")
+            }
+        });
 	});
     //create new group and insert the user who requested 
     router.post('/create/group',function(req,res){
+        var username = req.user.username;
+        console.log("USERNAME:",username);
     	Group.findOne({'name':req.body.new_group},function(err,group){
     		if(err){
 
@@ -24,8 +36,7 @@ module.exports = function (app, passport){
     		else{
     			var newGroup = new Group();
     			newGroup.name = req.body.new_group;
-    			User.findOne({'name':req.body.user_name},function(err,user){
-    				console.log("error>>>>>>>>>>>>>>>>>>"+req.body.user_name);
+    			User.findOne({'name':req.user.user_name},function(err,user){
 					if(err){
 						res.send(err);
 					}
@@ -52,15 +63,7 @@ module.exports = function (app, passport){
     		}
     	});
     });
-    // get all of group
-    router.get('/get/allGroup',function(req,res){
-    	Group.find(function(err,group){
-    		if(err){
-    			res.send(err);
-    		}
-    		res.send(group);
-    	});
-    });
+    
     // join group
     router.post('/join/group/:group_name',function(req,res){
     	Group.findOne({'name':req.params.group_name},function(err,group){
@@ -68,7 +71,7 @@ module.exports = function (app, passport){
     			res.send(err);
     		}
     		if(group){
-    			User.findOne({'name':req.user_name},function(err,user){
+    			User.findOne({'name':req.user.user_name},function(err,user){
     				if(err){
     					res.send(err);
     				}
@@ -78,9 +81,12 @@ module.exports = function (app, passport){
     						if(err){
     							res.send(err);
     						}
-    						res.send(group.messages);
+    						res.redirect('/chat/'+group.name,{group:group,message:group.messages});
     					});
     				}
+                    else{
+                        res.send("User is not found.")
+                    }
     			});
     		}
     		else{
