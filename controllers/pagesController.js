@@ -5,11 +5,14 @@ var Group = require('../models/group');
 var Message = require('../models/message');
 module.exports = function (app, passport) {
     app.get('/', function (req, res) {
+		if (!req.user)
+			res.redirect('login');
 		Group.find(function (err, groups) {
 			if (req.query.groupName) {
 				Group.findOne({ 'name': req.query.groupName }, { name: 1, users: 1, messages: 1 })
 					.populate('messages', { user: 1, text: 1, createdAt: 1 })
 					.populate('users', { name: 1 })
+					.sort({ 'updatedAt': -1 })
 					.exec(function (err, group) {
 						if (group) {
 							var promises = group.messages.map(function (message) {
@@ -22,26 +25,37 @@ module.exports = function (app, passport) {
 										});
 								});
 							});
+							var joinedStatus = false;
 							Promise.all(promises).then(function () {
-								res.render('ui', { allGroup: groups.sort({ updatedAt: -1 }), groupName: req.query.groupName, messages: group.messages });
+								// console.log(groups);
+								var promiese2 = group.users.map(function (user) {
+									return new Promise(function (resolve, reject) {
+										if (user._id+'' == req.user._id+'')
+											joinedStatus = true;
+										resolve();
+									});
+								});
+								Promise.all(promiese2).then(function () {
+									res.render('ui', { allGroup: groups, groupName: req.query.groupName, messages: group.messages, joinedStatus: joinedStatus, user: req.user });
+								});
 							});
 						}
 						else
-							res.render('ui', { allGroup: groups.sort({ updatedAt: -1 }) });
+							res.render('ui', { allGroup: groups, user: req.user });
 					});
 			}
 			else
-				res.render('ui', { allGroup: groups.sort({ updatedAt: -1 }) });
+				res.render('ui', { allGroup: groups, user: req.user });
 		});
     });
     router.post('/create/group', function (req, res) {
-		if(req.user)
-        	var username = req.user.username;
+		if (req.user)
+			var username = req.user.username;
 		else
 			var username = null;
 		Group.findOne({ 'name': req.body.new_group }, function (err, group) {
 			if (group) {
-				res.send({status:'already exist'});
+				res.send({ status: 'already exist' });
 			}
 			else {
 				var newGroup = new Group();
@@ -49,63 +63,58 @@ module.exports = function (app, passport) {
 				User.findOne({ 'username': username }, function (err, user) {
 					if (user) {
 						newGroup.users.push(user);
-                        newGroup.save(function(err){
+                        newGroup.save(function (err) {
 							user.groups.push(newGroup);
-							user.save(function(err){
-								res.send({status:'created'});
+							user.save(function (err) {
+								res.send({ status: 'created' });
 							});
 						});
 					}
 					else
-						res.send({status:'not login'});
+						res.send({ status: 'not login' });
 				});
 			}
 		});
     });
-
-    // join group
-    router.get('/join/group/:group_name', function (req, res) {
-
-        Group.findOne({ 'name': req.params.group_name }, function (err, group) {
-			if (err) {
-
-				res.send(err);
-			}
-			if (group) {
-				User.findOne({ 'username': req.user.username }, function (err, user) {
-					if (err) {
-						res.send(err);
-					}
-					if (user) {
-                        var idx = group.users.indexOf(user._id);
-                        if (idx >= 0)
-                            res.redirect('/group/' + group.name);
-
+    router.post('/join/group', function (req, res) {
+		if(req.user)
+			res.redirect('/login');
+		else
+			Group.findOne({ 'name': req.body.group_name }, function (err, group) {
+				if (group) {
+					var idx = group.users.indexOf(req.user._id);
+					if (idx >= 0)
+						res.redirect('/?groupName='+req.body.group_name);
+					else{
 						group.users.push(user);
-                        user.groups.push(group);
-                        user.save(function (err) {
-                            if (err) {
-                                res.send(err);
-                            }
-                        });
 						group.save(function (err) {
-							if (err) {
-								res.send(err);
-							}
-                            res.redirect('/group/' + group.name);
+							user.groups.push(group);
+							user.save(function (err) {
+								res.redirect('/?groupName='+req.body.group_name);
+							});
 						});
 					}
-                    else {
-                        res.send("User is not found.")
-                    }
+				}
+				else
+					res.redirect('/');
+			});
+    });
+	router.post('/leave/group/', function (req, res) {
+		if(req.user)
+			res.redirect('/');
+		Group.findOne({ 'name': req.body.group_name }, function (err, group) {
+			if (group) {
+				var idx = group.users.indexOf(req.user._id);
+				group.users.splice(idx, 1);
+				group.save(function (err) {
+					res.redirect('/');
 				});
 			}
-			else {
-				res.send("Sorry. This group has been closed.");
-			}
+			else
+				res.redirect('/');
 		});
-    });
-
+	});
+	
     //list user's group
     router.get('/getusergroup', function (req, res) {
 		User.findOne({ 'username': req.user.username }, function (err, user) {
@@ -154,31 +163,6 @@ module.exports = function (app, passport) {
             }
             else {
                 res.send("Sorry. This group has been closed.");
-			}
-		});
-	});
-	// leave group
-	router.get('/leave/group/:group_name', function (req, res) {
-		Group.findOne({ 'name': req.params.group_name }, function (err, group) {
-			if (err) {
-				res.send(err);
-			}
-			if (group) {
-				User.findOne({ 'name': req.user.name }, function (err, user) {
-					if (err) {
-						res.send(err);
-					}
-					if (user) {
-						var idx = group.users.indexOf(user._id);
-						group.users.splice(idx, 1);
-						group.save(function (err) {
-							if (err) {
-								res.send(err);
-							}
-							res.send("Success! You have left group.");
-						});
-					}
-				});
 			}
 		});
 	});

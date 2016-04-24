@@ -27,9 +27,10 @@ html
                 if groupName
                     div.message-title
                         span #{groupName}
-                        a.pull-right(href="")
-                            span.glyphicon.glyphicon-log-out
-            if groupName
+                        if joinedStatus
+                            a.pull-right(href="")
+                                span.glyphicon.glyphicon-log-out
+            if groupName && joinedStatus
                 div.row.ui-textbox
                     form#message-text-form
                         input#message-textbox.form-control(type="text", placeholder="Enter your message (press Enter to send)")
@@ -42,7 +43,7 @@ html
                             a(href="?groupName="+group.name)
                                 span.group-name #{group.name}
                                 span.group-recent #{group.users.length} users in this conversation
-            if groupName
+            if groupName && joinedStatus
                 div.message-box
                     each message in messages
                         div.message.message-friend
