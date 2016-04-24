@@ -47,6 +47,10 @@ html
                             span(aria-hidden="true") &times;
                         h4#modal-add-conversation-label.modal-title Create new conversation
                     div.modal-body
+                        div#alert-add-conversation.alert.alert-danger
+                            span.glyphicon.glyphicon-exclamation-sign
+                            |  
+                            span#alert-add-conversation-text
                         form#form-add-conversation
                             div.form-group
                                 input#input-conversation-name.form-control(type="text",name="new_group", placeholder="Tell your conversation name")
