@@ -5,6 +5,8 @@ var Group = require('../models/group');
 var Message = require('../models/message');
 module.exports = function (app, passport) {
     app.get('/', function (req, res) {
+		if (!req.user)
+			res.redirect('login');
 		Group.find(function (err, groups) {
 			if (req.query.groupName) {
 				Group.findOne({ 'name': req.query.groupName }, { name: 1, users: 1, messages: 1 })
@@ -23,9 +25,19 @@ module.exports = function (app, passport) {
 										});
 								});
 							});
+							var joinedStatus = false;
 							Promise.all(promises).then(function () {
-								console.log(groups);
-								res.render('ui', { allGroup: groups, groupName: req.query.groupName, messages: group.messages });
+								// console.log(groups);
+								var promiese2 = group.users.map(function (user) {
+									return new Promise(function (resolve, reject) {
+										if (user._id+'' == req.user._id+'')
+											joinedStatus = true;
+										resolve();
+									});
+								});
+								Promise.all(promiese2).then(function () {
+									res.render('ui', { allGroup: groups, groupName: req.query.groupName, messages: group.messages, joinedStatus: joinedStatus });
+								});
 							});
 						}
 						else
