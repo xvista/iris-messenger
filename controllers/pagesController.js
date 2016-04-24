@@ -5,17 +5,33 @@ var Group = require('../models/group');
 var Message = require('../models/message');
 module.exports = function (app, passport) {
     app.get('/', function (req, res) {
-		Group.find(function (err,groups) {
-			if(req.query.groupName){
-				Group.findOne({'name':req.query.groupName},function (err,group) {
-					if(group)
-						res.render('ui',{ allGroup: groups.sort({updatedAt:-1}), groupName:req.query.groupName, message:group.messages });
-					else
-        				res.render('ui',{ allGroup: groups.sort({updatedAt:-1}) });
-				});
+		Group.find(function (err, groups) {
+			if (req.query.groupName) {
+				Group.findOne({ 'name': req.query.groupName }, { name: 1, users: 1, messages: 1 })
+					.populate('messages', { user: 1, text: 1, createdAt: 1 })
+					.populate('users', { name: 1 })
+					.exec(function (err, group) {
+						if (group) {
+							var promises = group.messages.map(function (message) {
+								return new Promise(function (resolve, reject) {
+									Message.findById(message._id)
+										.populate('user', { name: 1 })
+										.exec(function (err, m) {
+											message.user = m.user;
+											resolve();
+										});
+								});
+							});
+							Promise.all(promises).then(function () {
+								res.render('ui', { allGroup: groups.sort({ updatedAt: -1 }), groupName: req.query.groupName, message: group.messages });
+							});
+						}
+						else
+							res.render('ui', { allGroup: groups.sort({ updatedAt: -1 }) });
+					});
 			}
 			else
-        		res.render('ui',{ allGroup: groups.sort({updatedAt:-1}) });
+				res.render('ui', { allGroup: groups.sort({ updatedAt: -1 }) });
 		});
     });
 	//    //join group
