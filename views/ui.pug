@@ -60,5 +60,25 @@ html
                         img.message-picture
                         span.message-sender Me
                         span.message-text ครับ
+            div.row
+                div.col-md-6
+                div.c0l-md-6
+                    form#chat-form(action="")
+                        input.box(type="text", id="chat-message", autocomplete="off", placeholder="Enter message here...")
         script(src="js/jquery.min.js")
         script(src="js/socket.io.js")
+        script.
+            var socket = io();
+            // เมื่อ form ถูก submit ให้ทำอะไร? 
+            $('#chat-form').submit(function() {
+                // ส่งข้อความที่พิมพ์มาไปยัง server ผ่านทางท่อชื่อ "chat"
+                socket.emit('chat', {"message":$('#chat-message').val(),"kry":"kor"});
+                $('#chat-message').val('').focus();
+                return false;
+            });
+            socket.on('chat', function(message) {
+                // แสดงผลข้อความที่ได้มาออกมาทางหน้าจอ
+                $('.message-box').append($('<div class="message message-me">')
+                .append($('<img class="message-picture">')).append($('<span class="message-sender">').text('Me'))
+                .append($('<span class="message-text">').text(message)));
+            });

@@ -1,6 +1,8 @@
 var User = require('../models/user');
 var Group = require('../models/group');
 var Message = require('../models/message');
+var express = require('express');
+var router = express.Router();
 module.exports = function (app, passport){
     app.get('/test/create/user/:username/:password/:name', function (req, res) {
         User.findOne({ 'username': req.params.username }, function (err,user) {
@@ -75,9 +77,11 @@ module.exports = function (app, passport){
                         res.send(err);
                     }
                     if(user){
+                        console.log(user)
                         var idx = group.users.indexOf(user._id);
+                        console.log(idx);
                         if(idx == -1){
-                            res.send(group);
+                            console.log(group);
                             res.send("This user isn't in this group");
                         }
                         else{
@@ -141,4 +145,42 @@ module.exports = function (app, passport){
             });
         });
     });
+    app.get('/test/get/alluser', function(req, res){
+        User.find(function(err,users){
+            if(err)
+                res.send(err);
+            res.send(users);
+        });
+    });
+    app.get('/test/add/usertogroup/:username/:groupname',function(req, res){
+        User.findOne({'username':req.params.username},function(err,user){
+            if(err)
+                res.send(err);
+            if(user){
+                Group.findOne({'name':req.params.groupname},function(err,group){
+                    if(err)
+                        res.send(err)
+                    if(group){
+                        var idx = group.users.indexOf(user._id);
+                        if(idx == -1){
+                            group.users.push(user);
+                            group.save(function(err){
+                                if(err)
+                                    res.send(err);
+                                res.send('add user complete');
+                            });
+                        }
+                        else{
+                            res.send("This user already in this group");
+                        }
+                    }
+                    else
+                        res.send("Group isn't exist");
+                });
+            }
+            else
+                res.send("User isn't exist");
+        });
+    });
+    return router;
 }
