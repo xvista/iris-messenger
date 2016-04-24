@@ -5,7 +5,34 @@ var Group = require('../models/group');
 var Message = require('../models/message');
 module.exports = function (app, passport) {
     app.get('/', function (req, res) {
-        res.render('ui');
+		Group.find(function (err, groups) {
+			if (req.query.groupName) {
+				Group.findOne({ 'name': req.query.groupName }, { name: 1, users: 1, messages: 1 })
+					.populate('messages', { user: 1, text: 1, createdAt: 1 })
+					.populate('users', { name: 1 })
+					.exec(function (err, group) {
+						if (group) {
+							var promises = group.messages.map(function (message) {
+								return new Promise(function (resolve, reject) {
+									Message.findById(message._id)
+										.populate('user', { name: 1 })
+										.exec(function (err, m) {
+											message.user = m.user;
+											resolve();
+										});
+								});
+							});
+							Promise.all(promises).then(function () {
+								res.render('ui', { allGroup: groups.sort({ updatedAt: -1 }), groupName: req.query.groupName, message: group.messages });
+							});
+						}
+						else
+							res.render('ui', { allGroup: groups.sort({ updatedAt: -1 }) });
+					});
+			}
+			else
+				res.render('ui', { allGroup: groups.sort({ updatedAt: -1 }) });
+		});
     });
 	//    //join group
 	//    router.get('/chat/:group_name', function(req, res){
@@ -21,7 +48,7 @@ module.exports = function (app, passport) {
 	//            }
 	//        });
 	// });
-    //create new group and insert the user who requested 
+    //create new group and insert the user who requested
     router.post('/create/group', function (req, res) {
         var username = req.user.username;
 		Group.findOne({ 'name': req.body.new_group }, function (err, group) {
@@ -86,9 +113,6 @@ module.exports = function (app, passport) {
 					if (user) {
                         var idx = group.users.indexOf(user._id);
                         if (idx >= 0)
-
-                            
-
                             res.redirect('/group/' + group.name);
 
 						group.users.push(user);
@@ -115,6 +139,30 @@ module.exports = function (app, passport) {
 			}
 		});
     });
+
+    //list user's group
+    router.get('/getusergroup',function(req,res) {
+      User.findOne({'username':req.user.username},function(err,user) {
+          if(err)
+          {
+              res.send(err);
+          }
+          if(user){
+            Group.find({'_id':{$in:user.groups}},{name:1,_id:0},function(err,groups){
+              user.groups = groups;
+              res.send(user.groups);
+            });
+          }
+      });
+    });
+
+    //list all group
+    router.get('/getallgroup',function(req,res) {
+      Group.find({},{name:1,_id:0},function(err,groups){
+        res.send(groups);
+      });
+    });
+
     router.get('/group/:group_name', function (req, res) {
         console.log(req.params.group_name);
 		Group.findOne({ 'name': req.params.group_name }, function (err, group) {
