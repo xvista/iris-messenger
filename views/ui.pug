@@ -17,24 +17,24 @@ html
                 p.pull-right
                     span.username #{user.name}
                     |  
-                    a(href="signout")
+                    a(href="signout", data-toggle="tooltip", data-placement="left", title="Logout")
                         span.glyphicon.glyphicon-off
             div.row.ui-subtitle
                 div.conversation-title
                     span Conversations
                     a#btn-add-conversation.pull-right(href="#", data-toggle="modal", data-target="#modal-add-conversation")
-                        span.glyphicon.glyphicon-plus
+                        span.glyphicon.glyphicon-plus(data-toggle="tooltip", data-placement="left", title="Create new conversation")
                 if groupName
                     div.message-title
                         span #{groupName}
                         if joinedStatus
-                            a.pull-right(href="leave/group?group_name="+groupName)
-                                span.glyphicon.glyphicon-log-out
+                            a.pull-right(href="#", data-toggle="modal", data-target="#modal-leave-conversation")
+                                span.glyphicon.glyphicon-log-out(data-toggle="tooltip", data-placement="left", title="Leave this conversation")
             if groupName && joinedStatus
                 div.row.ui-textbox
                     form#message-text-form
                         input#message-textbox.form-control(type="text", placeholder="Enter your message (press Enter to send)")
-                        button(type="submit")
+                        button(type="submit", data-toggle="tooltip", data-placement="top", title="Send")
                             span.glyphicon.glyphicon-send
             div.panel-conversation
                 ul.nav.conversation-list
@@ -80,10 +80,21 @@ html
                             span#alert-add-conversation-text
                         form#form-add-conversation
                             div.form-group
-                                input#input-conversation-name.form-control(type="text",name="new_group", placeholder="Tell your conversation name")
+                                input#input-conversation-name.form-control(autocomplete="off", type="text",name="new_group", placeholder="Tell your conversation name")
                     div.modal-footer
                         button.btn.btn-default(type="button", data-dismiss="modal") Cancel
-                        button#modal-add-conversation-submit.btn.btn-primary(type="button", data-dismiss="modal") Create
+                        button#modal-add-conversation-submit.btn.btn-primary(type="button") Create
+        div#modal-leave-conversation.modal.fade(tabindex="-1", role="dialog", aria-labelledby="modal-leave-conversation-label")
+            div.modal-dialog(role="document")
+                div.modal-content
+                    div.modal-header
+                        button.close(type="button", data-dismiss="modal", aria-label="Close")
+                            span(aria-hidden="true") &times;
+                        h4#modal-leave-conversation-label.modal-title Leave conversation
+                    div.modal-body Do you want to leave this conversation?
+                    div.modal-footer
+                        button.btn.btn-default(type="button", data-dismiss="modal") Cancel
+                        button#modal-leave-conversation-submit.btn.btn-primary(type="button") Confirm
         script(src="js/jquery.min.js")
         script(src="js/bootstrap.min.js")
         script(src="js/socket.io.js")
@@ -94,14 +105,24 @@ html
             
             $(document).ready(function(){
                 $('#message-textbox').focus();
+                $('[data-toggle="tooltip"]').tooltip();
             });
             
             $('#modal-add-conversation').on('shown.bs.modal', function(){
-                $('#input-conversation-name').focus()
+                $('#input-conversation-name').focus();
+            });
+            
+            $('#modal-add-conversation').on('hidden.bs.modal', function(){
+                $('#alert-add-conversation').hide();
+                $('#input-conversation-name').val('');
             });
             
             $('#modal-add-conversation-submit').click(function(){
                 $('#form-add-conversation').submit();
+            });
+            
+            $('#modal-leave-conversation-submit').click(function(){
+                window.location.href = 'leave/group?group_name=#{groupName}';
             });
             
             $('#message-text-form').submit(function(){
@@ -146,11 +167,11 @@ html
                 })
                 .done(function(data){
                     if(data.status == 'already exist') {
-                        $('#alert-add-conversation-text').html('already exist');
+                        $('#alert-add-conversation-text').html('This conversation name is already exist. Please try another name.');
                         $('#alert-add-conversation').show();
                     }
                     else if(data.status == 'not login') {
-                        $('#alert-add-conversation-text').html('not login');
+                        $('#alert-add-conversation-text').html('Please login first.');
                         $('#alert-add-conversation').show();
                     }
                     else if(data.status == 'created')

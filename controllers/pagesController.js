@@ -27,7 +27,6 @@ module.exports = function (app, passport) {
 							});
 							var joinedStatus = false;
 							Promise.all(promises).then(function () {
-								// console.log(groups);
 								var promiese2 = group.users.map(function (user) {
 									return new Promise(function (resolve, reject) {
 										if (user._id + '' == req.user._id + '')
@@ -117,9 +116,7 @@ module.exports = function (app, passport) {
 	router.post('/send/message', function (req, res) {
 		if (!req.user)
 			res.send({ 'status': 'not login' });
-		console.log(req.body.group);
 		Group.findOne({ 'name': req.body.groupName }, function (err, group) {
-			console.log(group);
 			if (group) {
 				var m = new Message();
 				m.user = req.user;

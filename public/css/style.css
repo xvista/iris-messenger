@@ -256,3 +256,15 @@ html, body {
     top: 102px;
     bottom: 0;
 }
+
+@media screen and (max-width: 768px) {
+    .whole-advice {
+        left: 200px;
+    }
+}
+
+/* MISC */
+
+.tooltip {
+    z-index: 2000;
+}
