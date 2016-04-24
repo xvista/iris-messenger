@@ -17,24 +17,24 @@ html
                 p.pull-right
                     span.username #{user.name}
                     |  
-                    a(href="signout")
+                    a(href="signout", data-toggle="tooltip", data-placement="left", title="Logout")
                         span.glyphicon.glyphicon-off
             div.row.ui-subtitle
                 div.conversation-title
                     span Conversations
                     a#btn-add-conversation.pull-right(href="#", data-toggle="modal", data-target="#modal-add-conversation")
-                        span.glyphicon.glyphicon-plus
+                        span.glyphicon.glyphicon-plus(data-toggle="tooltip", data-placement="left", title="Create new conversation")
                 if groupName
                     div.message-title
                         span #{groupName}
                         if joinedStatus
-                            a.pull-right(href="")
+                            a.pull-right(href="", data-toggle="tooltip", data-placement="left", title="Leave this conversation")
                                 span.glyphicon.glyphicon-log-out
             if groupName && joinedStatus
                 div.row.ui-textbox
                     form#message-text-form
                         input#message-textbox.form-control(type="text", placeholder="Enter your message (press Enter to send)")
-                        button(type="submit")
+                        button(type="submit", data-toggle="tooltip", data-placement="top", title="Send")
                             span.glyphicon.glyphicon-send
             div.panel-conversation
                 ul.nav.conversation-list
@@ -87,10 +87,12 @@ html
             
             $(document).ready(function(){
                 $('#message-textbox').focus();
+                $('[data-toggle="tooltip"]').tooltip();
             });
             
             $('#modal-add-conversation').on('shown.bs.modal', function(){
-                $('#input-conversation-name').focus()
+                $('#alert-add-conversation').hide();
+                $('#input-conversation-name').val('').focus();
             });
             
             $('#modal-add-conversation-submit').click(function(){
