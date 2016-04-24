@@ -86,7 +86,11 @@ module.exports = function (app, passport) {
 					if (user) {
                         var idx = group.users.indexOf(user._id);
                         if (idx >= 0)
-                            res.redirect('/home');
+
+                            
+
+                            res.redirect('/group/' + group.name);
+
 						group.users.push(user);
                         user.groups.push(group);
                         user.save(function (err) {
@@ -112,7 +116,8 @@ module.exports = function (app, passport) {
 		});
     });
     router.get('/group/:group_name', function (req, res) {
-        Group.findOne({ 'name': req.params.group_name }, function (err, group) {
+        console.log(req.params.group_name);
+		Group.findOne({ 'name': req.params.group_name }, function (err, group) {
             if (err) {
 
                 res.send(err);
