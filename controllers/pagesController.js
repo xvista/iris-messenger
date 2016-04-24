@@ -79,7 +79,7 @@ module.exports = function (app, passport) {
 				res.send(err);
 			}
 			if (group) {
-				User.findOne({ 'name': req.user.username }, function (err, user) {
+				User.findOne({ 'username': req.user.username }, function (err, user) {
 					if (err) {
 						res.send(err);
 					}
@@ -118,7 +118,7 @@ module.exports = function (app, passport) {
                 res.send(err);
             }
             if (group) {
-                User.findOne({ 'name': req.user.username }, function (err, user) {
+                User.findOne({ 'username': req.user.username }, function (err, user) {
                     if (err) {
                         res.send(err);
                     }
