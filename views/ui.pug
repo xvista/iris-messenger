@@ -46,9 +46,14 @@ html
             if groupName && joinedStatus
                 div.message-box
                     each message in messages
-                        div.message.message-friend
-                            span.message-sender #{message.user.name} | #{message.createdAt}
-                            span.message-text #{message.text}
+                        if message.user._id+'' == user._id+''
+                            div.message.message-me
+                                span.message-sender #{message.user.name} | #{message.createdAt}
+                                span.message-text #{message.text}
+                        else
+                            div.message.message-friend
+                                span.message-sender #{message.user.name} | #{message.createdAt}
+                                span.message-text #{message.text}
             if !groupName
                 div.whole-advice.welcome
                     h2 Welcome!
@@ -84,6 +89,8 @@ html
         script(src="js/socket.io.js")
         script.
             var socket = io();
+            if('#{groupName}'!='')
+                socket.emit('subscribe', '#{groupName}');
             
             $(document).ready(function(){
                 $('#message-textbox').focus();
@@ -99,29 +106,46 @@ html
             
             $('#message-text-form').submit(function(){
                 // TODO: socket emit
+                if('#{groupName}' != ''){
+                    $.ajax({
+                        url: "/send/message",
+                        data: {groupName:'#{groupName}', message:$('#message-textbox').val()},
+                        method: "post"
+                    })
+                    .done(function(data){
+                        if(data.status == 'not login')
+                            window.location.href = 'login';
+                        else if(data.status == 'group not exist')
+                            window.location.href = '/';
+                        else if(data.status == 'ok')
+                            socket.emit('send', {group:'#{groupName}', user: data.user, message: data.message});
+                    });
+                }
                 $('#message-textbox').val('');
                 return false;
             });
-            
-            socket.on('chat', function(message) {
+            socket.on('chat', function(data) {
                 // แสดงผลข้อความที่ได้มาออกมาทางหน้าจอ
-                $('#message-box').append($('<div class="message message-me">')
-                .append($('<img class="message-picture">')).append($('<span class="message-sender">').text('Me'))
-                .append($('<span class="message-text">').text(message)));
+                console.log(data);
+                if('#{user._id}' == data.user._id+'')
+                    $('.message-box').append($('<div class="message message-me">')
+                    .append($('<span class="message-sender">').text(data.user.name+' | '+data.message.createdAt))
+                    .append($('<span class="message-text">').text(data.message.text)));
+                else
+                    $('.message-box').append($('<div class="message message-friend">')
+                    .append($('<span class="message-sender">').text(data.user.name+' | '+data.message.createdAt))
+                    .append($('<span class="message-text">').text(data.message.text)));
             });
             $('#form-add-conversation').submit(function(e){
                 e.preventDefault();
                 $('#alert-add-conversation').hide();
-                console.log('wtf');
                 $.ajax({
                     url: "/create/group/",
                     data: {new_group:$('#input-conversation-name').val()},
                     method: "post"
                 })
                 .done(function(data){
-                    console.log(data);
                     if(data.status == 'already exist') {
-                        console.log('asd');
                         $('#alert-add-conversation-text').html('already exist');
                         $('#alert-add-conversation').show();
                     }

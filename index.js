@@ -28,7 +28,7 @@ io.on('connection',function(socket){
     socket.on('send', function(data) {
         console.log('sending message');
         console.log(data);
-        io.sockets.in(data.group).emit('chat', { 'kry':data.user, 'message':data.message });
+        io.sockets.in(data.group).emit('chat', { 'user':data.user, 'message':data.message });
     });
 });
 

@@ -18,7 +18,7 @@ module.exports = function (app, passport) {
 							var promises = group.messages.map(function (message) {
 								return new Promise(function (resolve, reject) {
 									Message.findById(message._id)
-										.populate('user', { name: 1 })
+										.populate('user')
 										.exec(function (err, m) {
 											message.user = m.user;
 											resolve();
@@ -30,7 +30,7 @@ module.exports = function (app, passport) {
 								// console.log(groups);
 								var promiese2 = group.users.map(function (user) {
 									return new Promise(function (resolve, reject) {
-										if (user._id+'' == req.user._id+'')
+										if (user._id + '' == req.user._id + '')
 											joinedStatus = true;
 										resolve();
 									});
@@ -77,20 +77,20 @@ module.exports = function (app, passport) {
 		});
     });
     router.post('/join/group', function (req, res) {
-		if(!req.user)
+		if (!req.user)
 			res.redirect('/login');
 		else
 			Group.findOne({ 'name': req.body.group_name }, function (err, group) {
 				if (group) {
 					var idx = group.users.indexOf(req.user._id);
 					if (idx >= 0)
-						res.redirect('/?groupName='+req.body.group_name);
-					else{
+						res.redirect('/?groupName=' + req.body.group_name);
+					else {
 						group.users.push(req.user._id);
 						group.save(function (err) {
 							req.user.groups.push(group);
 							req.user.save(function (err) {
-								res.redirect('/?groupName='+req.body.group_name);
+								res.redirect('/?groupName=' + req.body.group_name);
 							});
 						});
 					}
@@ -100,18 +100,39 @@ module.exports = function (app, passport) {
 			});
     });
 	router.get('/leave/group/', function (req, res) {
-		if(!req.user)
+		if (!req.user)
 			res.redirect('/login');
 		Group.findOne({ 'name': req.query.group_name }, function (err, group) {
 			if (group) {
 				var idx = group.users.indexOf(req.user._id);
 				group.users.splice(idx, 1);
 				group.save(function (err) {
-					res.redirect('/?groupName='+req.query.group_name);
+					res.redirect('/?groupName=' + req.query.group_name);
 				});
 			}
 			else
 				res.redirect('/');
+		});
+	});
+	router.post('/send/message', function (req, res) {
+		if (!req.user)
+			res.send({ 'status': 'not login' });
+		console.log(req.body.group);
+		Group.findOne({ 'name': req.body.groupName }, function (err, group) {
+			console.log(group);
+			if (group) {
+				var m = new Message();
+				m.user = req.user;
+				m.text = req.body.message;
+				m.save(function (err) {
+					group.messages.push(m);
+					group.save(function (err) {
+						res.send({ 'status': 'ok', 'user': req.user, 'message': m });
+					});
+				});
+			}
+			else
+				res.send({ 'status': 'group not exist' });
 		});
 	});
 	return router;
