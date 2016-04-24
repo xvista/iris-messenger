@@ -33,7 +33,7 @@ html
             if groupName && joinedStatus
                 div.row.ui-textbox
                     form#message-text-form
-                        input#message-textbox.form-control(type="text", placeholder="Enter your message (press Enter to send)")
+                        input#message-textbox.form-control(type="text", autocomplete="off", placeholder="Enter your message (press Enter to send)")
                         button(type="submit", data-toggle="tooltip", data-placement="top", title="Send")
                             span.glyphicon.glyphicon-send
             div.panel-conversation
@@ -106,6 +106,7 @@ html
             $(document).ready(function(){
                 $('#message-textbox').focus();
                 $('[data-toggle="tooltip"]').tooltip();
+                $("html, body").animate({ scrollTop: $(document).height()-$(window).height() }, 0);
             });
             
             $('#modal-add-conversation').on('shown.bs.modal', function(){
@@ -156,6 +157,7 @@ html
                     $('.message-box').append($('<div class="message message-friend">')
                     .append($('<span class="message-sender">').text(data.user.name+' | '+data.message.createdAt))
                     .append($('<span class="message-text">').text(data.message.text)));
+                $("html, body").animate({ scrollTop: $(document).height()-$(window).height() }, 0);
             });
             $('#form-add-conversation').submit(function(e){
                 e.preventDefault();

@@ -197,7 +197,7 @@ html, body {
 }
 
 .message > .message-sender {
-    font-size: small;
+    font-size: 0.8em;
     color: #888;
     display: block;
     margin-bottom: 8px;
