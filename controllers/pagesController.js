@@ -5,7 +5,18 @@ var Group = require('../models/group');
 var Message = require('../models/message');
 module.exports = function (app, passport) {
     app.get('/', function (req, res) {
-        res.render('ui');
+		Group.find(function (err,groups) {
+			if(req.query.groupName){
+				Group.findOne({'name':req.query.groupName},function (err,group) {
+					if(group)
+						res.render('ui',{ allGroup: groups.sort({updatedAt:-1}), groupName:req.query.groupName, message:group.messages });
+					else
+        				res.render('ui',{ allGroup: groups.sort({updatedAt:-1}) });
+				});
+			}
+			else
+        		res.render('ui',{ allGroup: groups.sort({updatedAt:-1}) });
+		});
     });
 	//    //join group
 	//    router.get('/chat/:group_name', function(req, res){
@@ -86,9 +97,6 @@ module.exports = function (app, passport) {
 					if (user) {
                         var idx = group.users.indexOf(user._id);
                         if (idx >= 0)
-
-                            
-
                             res.redirect('/group/' + group.name);
 
 						group.users.push(user);
