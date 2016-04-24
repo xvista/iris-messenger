@@ -41,7 +41,7 @@ module.exports = function (app, passport) {
 			var username = null;
 		Group.findOne({ 'name': req.body.new_group }, function (err, group) {
 			if (group) {
-				res.ajax({status:'already exist'});
+				res.send({status:'already exist'});
 			}
 			else {
 				var newGroup = new Group();
@@ -52,12 +52,12 @@ module.exports = function (app, passport) {
                         newGroup.save(function(err){
 							user.groups.push(newGroup);
 							user.save(function(err){
-								res.ajax({status:'created'});
+								res.send({status:'created'});
 							});
 						});
 					}
 					else
-						res.ajax({status:'not login'});
+						res.send({status:'not login'});
 				});
 			}
 		});

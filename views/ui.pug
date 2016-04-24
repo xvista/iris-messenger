@@ -56,7 +56,7 @@ html
                                 input#input-conversation-name.form-control(type="text",name="new_group", placeholder="Tell your conversation name")
                     div.modal-footer
                         button.btn.btn-default(type="button", data-dismiss="modal") Cancel
-                        button.btn.btn-primary(type="button", data-dismiss="modal") Create
+                        button#modal-add-conversation-submit.btn.btn-primary(type="button", data-dismiss="modal") Create
         script(src="js/jquery.min.js")
         script(src="js/bootstrap.min.js")
         script(src="js/socket.io.js")
@@ -69,6 +69,10 @@ html
             
             $('#modal-add-conversation').on('shown.bs.modal', function(){
                 $('#input-conversation-name').focus()
+            });
+            
+            $('#modal-add-conversation-submit').click(function(){
+                $('#form-add-conversation').submit();
             });
             
             $('#message-text-form').submit(function(){
@@ -85,15 +89,25 @@ html
             });
             $('#form-add-conversation').submit(function(e){
                 e.preventDefault();
+                $('#alert-add-conversation').hide();
+                console.log('wtf');
                 $.ajax({
                     url: "/create/group/",
                     data: {new_group:$('#input-conversation-name').val()},
                     method: "post"
                 })
                 .done(function(data){
-                    if(data.status == 'already exist')
+                    console.log(data);
+                    if(data.status == 'already exist') {
                         console.log('asd');
+                        $('#alert-add-conversation-text').html('already exist');
+                        $('#alert-add-conversation').show();
+                    }
+                    else if(data.status == 'not login') {
+                        $('#alert-add-conversation-text').html('not login');
+                        $('#alert-add-conversation').show();
+                    }
                     else if(data.status == 'created')
-                        console.lof('dsf');
+                        window.location.href = '';
                 });
             });
