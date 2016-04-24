@@ -34,64 +34,30 @@ module.exports = function (app, passport) {
 				res.render('ui', { allGroup: groups.sort({ updatedAt: -1 }) });
 		});
     });
-	//    //join group
-	//    router.get('/chat/:group_name', function(req, res){
-	//        Group.findOne({'name':req.params.group_name},function(err,group){
-	//            if(err){
-	//                res.send(err);
-	//            }
-	//            if(group){
-	//                res.render('chat',{user:req.user.username,group:req.params.group_name,group_message:group.messages});
-	//            }
-	//            else{
-	//                res.send("The group is not exist.")
-	//            }
-	//        });
-	// });
-    //create new group and insert the user who requested
     router.post('/create/group', function (req, res) {
-        var username = req.user.username;
+		if(req.user)
+        	var username = req.user.username;
+		else
+			var username = null;
 		Group.findOne({ 'name': req.body.new_group }, function (err, group) {
-			if (err) {
-
-				res.send(err);
-			}
 			if (group) {
-				res.send("The group already exist")
+				res.ajax({status:'already exist'});
 			}
 			else {
 				var newGroup = new Group();
 				newGroup.name = req.body.new_group;
-                // just in case the req.user.username == null
 				User.findOne({ 'username': username }, function (err, user) {
-					if (err) {
-						res.send(err);
-					}
 					if (user) {
 						newGroup.users.push(user);
-                        user.groups.push(newGroup);
-                        user.save(function (err) {
-                            if (err) {
-                                res.send(err);
-                            }
-                        });
-						newGroup.save(function (err) {
-							if (err) {
-								res.send(err);
-							}
-							else {
-								res.redirect('/chat/' + newGroup.name);
-							}
+                        newGroup.save(function(err){
+							user.groups.push(newGroup);
+							user.save(function(err){
+								res.ajax({status:'created'});
+							});
 						});
 					}
-					else {
-						res.send("User not found");
-					}
-				});
-				newGroup.save(function (err) {
-					if (err) {
-						res.send(err);
-					}
+					else
+						res.ajax({status:'not login'});
 				});
 			}
 		});
@@ -141,26 +107,25 @@ module.exports = function (app, passport) {
     });
 
     //list user's group
-    router.get('/getusergroup',function(req,res) {
-      User.findOne({'username':req.user.username},function(err,user) {
-          if(err)
-          {
-              res.send(err);
-          }
-          if(user){
-            Group.find({'_id':{$in:user.groups}},{name:1,_id:0},function(err,groups){
-              user.groups = groups;
-              res.send(user.groups);
-            });
-          }
-      });
+    router.get('/getusergroup', function (req, res) {
+		User.findOne({ 'username': req.user.username }, function (err, user) {
+			if (err) {
+				res.send(err);
+			}
+			if (user) {
+				Group.find({ '_id': { $in: user.groups } }, { name: 1, _id: 0 }, function (err, groups) {
+					user.groups = groups;
+					res.send(user.groups);
+				});
+			}
+		});
     });
 
     //list all group
-    router.get('/getallgroup',function(req,res) {
-      Group.find({},{name:1,_id:0},function(err,groups){
-        res.send(groups);
-      });
+    router.get('/getallgroup', function (req, res) {
+		Group.find({}, { name: 1, _id: 0 }, function (err, groups) {
+			res.send(groups);
+		});
     });
 
     router.get('/group/:group_name', function (req, res) {

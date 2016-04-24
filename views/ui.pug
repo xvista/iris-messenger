@@ -17,7 +17,7 @@ html
                         span.glyphicon.glyphicon-plus
                 if groupName
                     div.message-title
-                        span Group Name
+                        span #{groupName}
                         a.pull-right(href="")
                             span.glyphicon.glyphicon-log-out
             if groupName
@@ -47,9 +47,9 @@ html
                             span(aria-hidden="true") &times;
                         h4#modal-add-conversation-label.modal-title Create new conversation
                     div.modal-body
-                        form
+                        form#form-add-conversation
                             div.form-group
-                                input#input-conversation-name.form-control(type="text", placeholder="Tell your conversation name")
+                                input#input-conversation-name.form-control(type="text",name="new_group", placeholder="Tell your conversation name")
                     div.modal-footer
                         button.btn.btn-default(type="button", data-dismiss="modal") Cancel
                         button.btn.btn-primary(type="button", data-dismiss="modal") Create
@@ -79,5 +79,17 @@ html
                 .append($('<img class="message-picture">')).append($('<span class="message-sender">').text('Me'))
                 .append($('<span class="message-text">').text(message)));
             });
-            var local_data =!{JSON.stringify(data)};
-            console.log(local_data);
+            $('#form-add-conversation').submit(function(e){
+                e.preventDefault();
+                $.ajax({
+                    url: "/create/group/",
+                    data: {new_group:$('#input-conversation-name').val()},
+                    method: "post"
+                })
+                .done(function(data){
+                    if(data.status == 'already exist')
+                        console.log('asd');
+                    else if(data.status == 'created')
+                        console.lof('dsf');
+                });
+            });
