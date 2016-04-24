@@ -86,7 +86,7 @@ module.exports = function (app, passport) {
 					if (user) {
                         var idx = group.users.indexOf(user._id);
                         if (idx >= 0)
-                            res.send('User alreay in this group');
+                            res.redirect('/home');
 						group.users.push(user);
                         user.groups.push(group);
                         user.save(function (err) {
