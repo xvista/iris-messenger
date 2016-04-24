@@ -1,5 +1,11 @@
-body {
+html, body {
     height: 100%;
+}
+
+.container-fluid {
+    margin: 0 auto;
+    height: 100%;
+    box-sizing: border-box;
 }
 
 .ui-title {
@@ -13,13 +19,25 @@ body {
     font-size: 0.85em;
 }
 
+.panel > .row {
+    position: relative;
+    margin: 0 auto;
+    height: 100%;
+    display: flex;
+    box-sizing: border-box;
+}
+
 /*
   ========== SIDEBAR ===============  
 */
 
-.sidebar {
+.panel-conversation {
     height: 100%;
-    float: left;
+    position: fixed;
+    width: 330px;
+    top: 56px;
+    bottom: 0;
+    left: 330px;
     z-index: 1000;
     display: block;
     padding: 20px;
@@ -29,35 +47,35 @@ body {
     border-right: 1px solid #eee;
 }
 
-.sidebar-list {
+.conversation-list {
     margin-right: -21px; /* 20px padding + 1px border */
     margin-bottom: 20px;
     margin-left: -20px;
 }
-.sidebar-list > li {
+.conversation-list > li {
     border-bottom: 1px solid #eee;
 }
-.sidebar-list > li > a {
+.conversation-list > li > a {
     padding-right: 20px;
     padding-left: 20px;
 }
-.sidebar-list > .active > a,
-.sidebar-list > .active > a:hover,
-.sidebar-list > .active > a:focus {
+.conversation-list > .active > a,
+.conversation-list > .active > a:hover,
+.conversation-list > .active > a:focus {
     color: #fff;
     background-color: #428bca;
 }
 
-.sidebar-list > li > a > .group-name {
+.conversation-list > li > a > .group-name {
     display: block;
     font-weight: bold;
 }
-.sidebar-list > li > a > .group-recent {
+.conversation-list > li > a > .group-recent {
     display: block;
     font-size: small;
 }
 
-.sidebar-title {
+.conversation-title {
     display: block;
     text-align: center;
 }
@@ -68,7 +86,11 @@ body {
 
 .message-box {
     height: 100%;
-    float: right;
+    position: fixed;
+    top: 56px;
+    bottom: 0;
+    left: 660px;
+    right: 0;
     z-index: 1000;
     display: block;
     padding: 20px;
@@ -138,11 +160,15 @@ body {
   ========== PANEL ===============  
 */
 
-.panel {
+.panel-friend {
     height: 100%;
-    float: left;
+    position: fixed;
+    width: 330px;
+    top: 56px;
+    bottom: 0;
+    left: 0;
     z-index: 1000;
-    display: flex;
+    display: block;
     padding: 20px;
     overflow-x: hidden;
     overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
