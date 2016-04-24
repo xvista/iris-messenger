@@ -77,7 +77,7 @@ module.exports = function (app, passport) {
 		});
     });
     router.post('/join/group', function (req, res) {
-		if(req.user)
+		if(!req.user)
 			res.redirect('/login');
 		else
 			Group.findOne({ 'name': req.body.group_name }, function (err, group) {
@@ -100,7 +100,7 @@ module.exports = function (app, passport) {
 			});
     });
 	router.post('/leave/group/', function (req, res) {
-		if(req.user)
+		if(!req.user)
 			res.redirect('/');
 		Group.findOne({ 'name': req.body.group_name }, function (err, group) {
 			if (group) {
