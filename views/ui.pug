@@ -1,3 +1,8 @@
+-function toDD(dateString){
+    -var date = new Date(dateString);
+    -return date.toDateString()+' '+date.getHours()+':'+date.getMinutes()+':'+date.getSeconds();
+-}
+
 doctype html
 html
     head
@@ -48,11 +53,11 @@ html
                     each message in messages
                         if message.user._id+'' == user._id+''
                             div.message.message-me
-                                span.message-sender #{message.user.name} | #{message.createdAt}
+                                span.message-sender #{message.user.name} | #{toDD(message.createdAt)}
                                 span.message-text #{message.text}
                         else
                             div.message.message-friend
-                                span.message-sender #{message.user.name} | #{message.createdAt}
+                                span.message-sender #{message.user.name} | #{toDD(message.createdAt)}
                                 span.message-text #{message.text}
             if !groupName
                 div.whole-advice.welcome
@@ -149,13 +154,15 @@ html
             socket.on('chat', function(data) {
                 // แสดงผลข้อความที่ได้มาออกมาทางหน้าจอ
                 console.log(data);
+                var date = new Date(data.message.createdAt);
+                var dd = date.toDateString()+' '+date.getHours()+':'+date.getMinutes()+':'+date.getSeconds();
                 if('#{user._id}' == data.user._id+'')
                     $('.message-box').append($('<div class="message message-me">')
-                    .append($('<span class="message-sender">').text(data.user.name+' | '+data.message.createdAt))
+                    .append($('<span class="message-sender">').text(data.user.name+' | '+dd))
                     .append($('<span class="message-text">').text(data.message.text)));
                 else
                     $('.message-box').append($('<div class="message message-friend">')
-                    .append($('<span class="message-sender">').text(data.user.name+' | '+data.message.createdAt))
+                    .append($('<span class="message-sender">').text(data.user.name+' | '+dd))
                     .append($('<span class="message-text">').text(data.message.text)));
                 $("html, body").animate({ scrollTop: $(document).height()-$(window).height() }, 0);
             });
