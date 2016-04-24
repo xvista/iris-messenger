@@ -21,6 +21,15 @@ html, body {
 .ui-title > span.icon-iris {
     font-size: 0.85em;
 }
+.ui-title .pull-right {
+    margin: 0;
+}
+.ui-title .username {
+    display: inline-block;
+    font-size: 0.75em;
+    color: #999;
+    margin-right: 5px;
+}
 
 .ui-subtitle {
     font-size: 1.25em;
@@ -47,10 +56,6 @@ html, body {
     left: 330px;
     right: 0;
     border-right: 1px solid #eee;
-}
-.ui-subtitle .pull-right {
-    position: absolute;
-    right: 10px;
 }
 
 @media screen and (max-width: 768px) {
@@ -154,6 +159,7 @@ html, body {
 .conversation-list > li > a > .group-recent {
     display: block;
     font-size: small;
+    color: #999;
 }
 
 #alert-add-conversation {
@@ -227,4 +233,26 @@ html, body {
     background: #aaa;
     padding: 8px 10px;
     border-radius: 15px;
+}
+
+/*
+  ========== MIDDLE WRAPPER ===============  
+*/
+
+.whole-advice {
+    position: fixed;
+    color: #777;
+    left: 330px;
+    right: 0;
+    padding: 30px;
+    background: #f6f6f6;
+    text-align: center;
+}
+.welcome {
+    top: 56px;
+    bottom: 0;
+}
+.join-advice {
+    top: 102px;
+    bottom: 0;
 }

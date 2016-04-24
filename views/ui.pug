@@ -2,7 +2,11 @@ doctype html
 html
     head
         meta(charset="utf-8")
-        title Iris Messenger
+        title
+            if groupName
+                | #{groupName} - Iris Messenger
+            else
+                | Iris Messenger
         link(rel="stylesheet", href="css/bootstrap.min.css")
         link(rel="stylesheet", href="css/style.css")
     body
@@ -10,6 +14,11 @@ html
             div.row.ui-title
                 span(class="glyphicon glyphicon-comment icon-iris")
                 |  Iris Messenger
+                p.pull-right
+                    span.username Name here
+                    |  
+                    a(href="logout")
+                        span.glyphicon.glyphicon-off
             div.row.ui-subtitle
                 div.conversation-title
                     span Conversations
@@ -39,6 +48,15 @@ html
                         div.message.message-friend
                             span.message-sender #{message.user.name} | #{message.createdAt}
                             span.message-text #{message.text}
+            // div.whole-advice.welcome
+            //     h2 Welcome!
+            //     p Conversation list is located at the left of your screen.
+            div.whole-advice.join-advice
+                h2 You haven't join this conversation yet
+                form(method="post", action="hi")
+                    button.btn.btn-primary.btn-lg(type="submit")
+                        span.glyphicon.glyphicon-log-in
+                        |  Join this conversation
         div#modal-add-conversation.modal.fade(tabindex="-1", role="dialog", aria-labelledby="modal-add-conversation-label")
             div.modal-dialog(role="document")
                 div.modal-content
