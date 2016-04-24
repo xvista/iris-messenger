@@ -6,9 +6,9 @@ var timestamps = require('mongoose-timestamp');
 // create a schema
 var groupSchema = new Schema({
   name: { type: String, required: true, unique: true },
-  users: [{ type : Schema.Types.ObjectId, ref: 'User', unique: true }],
-  messages: [{ type : Schema.Types.ObjectId, ref: 'Message'}]
-},{ collection: "groups" });
+  users: [{ type: Schema.Types.ObjectId, ref: 'User', unique: true }],
+  messages: [{ type: Schema.Types.ObjectId, ref: 'Message' }]
+}, { collection: "groups" });
 
 groupSchema.plugin(timestamps);
 

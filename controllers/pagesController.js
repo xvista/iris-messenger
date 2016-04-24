@@ -86,7 +86,7 @@ module.exports = function (app, passport) {
 					if (idx >= 0)
 						res.redirect('/?groupName='+req.body.group_name);
 					else{
-						group.users.push(user);
+						group.users.push(req.user._id);
 						group.save(function (err) {
 							user.groups.push(group);
 							user.save(function (err) {

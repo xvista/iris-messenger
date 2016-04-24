@@ -9,13 +9,13 @@ autoIncrement.initialize(connection);
 
 // create a schema
 var messageSchema = new Schema({
-  user: { type : Schema.Types.ObjectId, ref: 'User'},
+  user: { type: Schema.Types.ObjectId, ref: 'User' },
   text: { type: String, required: true }
-},{ collection: "messages" });
+}, { collection: "messages" });
 
 messageSchema.plugin(autoIncrement.plugin, {
-    model: 'Message',
-    field: 'messageId'
+  model: 'Message',
+  field: 'messageId'
 });
 messageSchema.plugin(timestamps);
 
