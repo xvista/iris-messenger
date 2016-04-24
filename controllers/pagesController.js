@@ -88,8 +88,8 @@ module.exports = function (app, passport) {
 					else{
 						group.users.push(req.user._id);
 						group.save(function (err) {
-							user.groups.push(group);
-							user.save(function (err) {
+							req.user.groups.push(group);
+							req.user.save(function (err) {
 								res.redirect('/?groupName='+req.body.group_name);
 							});
 						});
