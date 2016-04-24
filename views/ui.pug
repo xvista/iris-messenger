@@ -13,7 +13,7 @@ html
             div.row.ui-subtitle
                 div.conversation-title
                     span Conversations
-                    a.pull-right(href="")
+                    a#btn-add-conversation.pull-right(href="#", data-toggle="modal", data-target="#modal-add-conversation")
                         span.glyphicon.glyphicon-plus
                 if groupName
                     div.message-title
@@ -23,7 +23,7 @@ html
             if groupName
                 div.row.ui-textbox
                     form#message-text-form
-                        input.form-control(type="text", placeholder="Enter your message (press Enter to send)")
+                        input#message-textbox.form-control(type="text", placeholder="Enter your message (press Enter to send)")
                         button(type="submit")
                             span.glyphicon.glyphicon-send
             div.panel-conversation
@@ -39,66 +39,43 @@ html
                         div.message.message-friend
                             span.message-sender #{message.user.name} | #{message.createdAt}
                             span.message-text #{message.text}
-            // div.row
-            //     div.col-xs-3.panel.panel-conversation
-            //         ul.nav.conversation-list
-            //             li
-            //                 a(href="#")
-            //                     span.group-name Group Name
-            //                     span.group-recent 5 users in this conversation
-            //             li
-            //                 a(href="#")
-            //                     span.group-name Group Name
-            //                     span.group-recent Recent Message
-            //             li
-            //                 a(href="#")
-            //                     span.group-name Group Name
-            //                     span.group-recent Recent Message
-            //             li
-            //                 a(href="#")
-            //                     span.group-name Group Name
-            //                     span.group-recent Recent Message
-            //     div.col-xs-9.message-box
-            //         div.message-textbox
-            //                     input.form-control(type="text", placeholder="Enter your message (press Enter to send)")
-            //         div.message-feed
-            //             div.message.message-friend
-            //                 span.message-sender คุนชาeตู่za
-            //                 span.message-text อะไรของมึงวะปั๊ดโธ่
-            //             div.message.message-me
-            //                 span.message-sender Me
-            //                 span.message-text อูย
-            //             div.message.message-me
-            //                 span.message-sender Me
-            //                 span.message-text กลัวแล้วพี่
-            //             div.message.message-friend
-            //                 span.message-sender คุนชาeตู่za
-            //                 span.message-text ลงไปซื้อมาม่าผัดได้แล้ว
-            //             div.message.message-friend
-            //                 span.message-sender คุนชาeตู่za
-            //                 span.message-text หิว
-            //             div.message.message-me
-            //                 span.message-sender Me
-            //                 span.message-text ครับ
-            //div.row
-                div.col-md-6
-                div.c0l-md-6
-                    form#chat-form(action="")
-                        input.box(type="text", id="chat-message", autocomplete="off", placeholder="Enter message here...")
+        div#modal-add-conversation.modal.fade(tabindex="-1", role="dialog", aria-labelledby="modal-add-conversation-label")
+            div.modal-dialog(role="document")
+                div.modal-content
+                    div.modal-header
+                        button.close(type="button", data-dismiss="modal", aria-label="Close")
+                            span(aria-hidden="true") &times;
+                        h4#modal-add-conversation-label.modal-title Create new conversation
+                    div.modal-body
+                        form
+                            div.form-group
+                                input#input-conversation-name.form-control(type="text", placeholder="Tell your conversation name")
+                    div.modal-footer
+                        button.btn.btn-default(type="button", data-dismiss="modal") Cancel
+                        button.btn.btn-primary(type="button", data-dismiss="modal") Create
         script(src="js/jquery.min.js")
+        script(src="js/bootstrap.min.js")
         script(src="js/socket.io.js")
         script.
             var socket = io();
-            // เมื่อ form ถูก submit ให้ทำอะไร? 
-            $('#chat-form').submit(function() {
-                // ส่งข้อความที่พิมพ์มาไปยัง server ผ่านทางท่อชื่อ "chat"
-                socket.emit('chat', {"message":$('#chat-message').val(),"kry":"kor"});
-                $('#chat-message').val('').focus();
+            
+            $(document).ready(function(){
+                $('#message-textbox').focus();
+            });
+            
+            $('#modal-add-conversation').on('shown.bs.modal', function(){
+                $('#input-conversation-name').focus()
+            });
+            
+            $('#message-text-form').submit(function(){
+                // TODO: socket emit
+                $('#message-textbox').val('');
                 return false;
             });
+            
             socket.on('chat', function(message) {
                 // แสดงผลข้อความที่ได้มาออกมาทางหน้าจอ
-                $('.message-box').append($('<div class="message message-me">')
+                $('#message-box').append($('<div class="message message-me">')
                 .append($('<img class="message-picture">')).append($('<span class="message-sender">').text('Me'))
                 .append($('<span class="message-text">').text(message)));
             });
