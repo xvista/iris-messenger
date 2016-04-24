@@ -15,15 +15,17 @@ html
                     span Conversations
                     a.pull-right(href="")
                         span.glyphicon.glyphicon-plus
-                div.message-title
-                    span Group Name
-                    a.pull-right(href="")
-                        span.glyphicon.glyphicon-log-out
-            div.row.ui-textbox
-                form#message-text-form
-                    input.form-control(type="text", placeholder="Enter your message (press Enter to send)")
-                    button(type="submit")
-                        span.glyphicon.glyphicon-send
+                if groupName
+                    div.message-title
+                        span Group Name
+                        a.pull-right(href="")
+                            span.glyphicon.glyphicon-log-out
+            if groupName
+                div.row.ui-textbox
+                    form#message-text-form
+                        input.form-control(type="text", placeholder="Enter your message (press Enter to send)")
+                        button(type="submit")
+                            span.glyphicon.glyphicon-send
             div.panel-conversation
                 ul.nav.conversation-list
                     each group in allGroup
@@ -31,25 +33,12 @@ html
                             a(href="?groupName="+group.name)
                                 span.group-name #{group.name}
                                 span.group-recent #{group.users.length} users in this conversation
-            div.message-box
-                div.message.message-friend
-                    span.message-sender คุนชาeตู่za
-                    span.message-text อะไรของมึงวะปั๊ดโธ่
-                div.message.message-me
-                    span.message-sender Me
-                    span.message-text อูย
-                div.message.message-me
-                    span.message-sender Me
-                    span.message-text กลัวแล้วพี่
-                div.message.message-friend
-                    span.message-sender คุนชาeตู่za
-                    span.message-text ลงไปซื้อมาม่าผัดได้แล้ว
-                div.message.message-friend
-                    span.message-sender คุนชาeตู่za
-                    span.message-text หิว
-                div.message.message-me
-                    span.message-sender Me
-                    span.message-text ครับ
+            if groupName
+                div.message-box
+                    each message in messages
+                        div.message.message-friend
+                            span.message-sender #{message.user.name} | #{message.createdAt}
+                            span.message-text #{message.text}
             // div.row
             //     div.col-xs-3.panel.panel-conversation
             //         ul.nav.conversation-list
