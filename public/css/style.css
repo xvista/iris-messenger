@@ -156,6 +156,10 @@ html, body {
     font-size: small;
 }
 
+#alert-add-conversation {
+    display: none;
+}
+
 /*
   ========== MESSAGE BOX ===============  
 */
