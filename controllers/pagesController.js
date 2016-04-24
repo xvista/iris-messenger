@@ -21,7 +21,7 @@ module.exports = function (app, passport) {
 	//            }
 	//        });
 	// });
-    //create new group and insert the user who requested 
+    //create new group and insert the user who requested
     router.post('/create/group', function (req, res) {
         var username = req.user.username;
 		Group.findOne({ 'name': req.body.new_group }, function (err, group) {
@@ -111,6 +111,30 @@ module.exports = function (app, passport) {
 			}
 		});
     });
+
+    //list user's group
+    router.get('/getusergroup',function(req,res) {
+      User.findOne({'username':req.user.username},function(err,user) {
+          if(err)
+          {
+              res.send(err);
+          }
+          if(user){
+            Group.find({'_id':{$in:user.groups}},{name:1,_id:0},function(err,groups){
+              user.groups = groups;
+              res.send(user.groups);
+            });
+          }
+      });
+    });
+
+    //list all group
+    router.get('/getallgroup',function(req,res) {
+      Group.find({},{name:1,_id:0},function(err,groups){
+        res.send(groups);
+      });
+    });
+
     router.get('/group/:group_name', function (req, res) {
         Group.findOne({ 'name': req.params.group_name }, function (err, group) {
             if (err) {
