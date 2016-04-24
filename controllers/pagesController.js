@@ -10,6 +10,7 @@ module.exports = function (app, passport) {
 				Group.findOne({ 'name': req.query.groupName }, { name: 1, users: 1, messages: 1 })
 					.populate('messages', { user: 1, text: 1, createdAt: 1 })
 					.populate('users', { name: 1 })
+					.sort({ 'updatedAt': -1 })
 					.exec(function (err, group) {
 						if (group) {
 							var promises = group.messages.map(function (message) {
@@ -23,25 +24,26 @@ module.exports = function (app, passport) {
 								});
 							});
 							Promise.all(promises).then(function () {
-								res.render('ui', { allGroup: groups.sort({ updatedAt: -1 }), groupName: req.query.groupName, messages: group.messages });
+								console.log(groups);
+								res.render('ui', { allGroup: groups, groupName: req.query.groupName, messages: group.messages });
 							});
 						}
 						else
-							res.render('ui', { allGroup: groups.sort({ updatedAt: -1 }) });
+							res.render('ui', { allGroup: groups });
 					});
 			}
 			else
-				res.render('ui', { allGroup: groups.sort({ updatedAt: -1 }) });
+				res.render('ui', { allGroup: groups });
 		});
     });
     router.post('/create/group', function (req, res) {
-		if(req.user)
-        	var username = req.user.username;
+		if (req.user)
+			var username = req.user.username;
 		else
 			var username = null;
 		Group.findOne({ 'name': req.body.new_group }, function (err, group) {
 			if (group) {
-				res.send({status:'already exist'});
+				res.send({ status: 'already exist' });
 			}
 			else {
 				var newGroup = new Group();
@@ -49,15 +51,15 @@ module.exports = function (app, passport) {
 				User.findOne({ 'username': username }, function (err, user) {
 					if (user) {
 						newGroup.users.push(user);
-                        newGroup.save(function(err){
+                        newGroup.save(function (err) {
 							user.groups.push(newGroup);
-							user.save(function(err){
-								res.send({status:'created'});
+							user.save(function (err) {
+								res.send({ status: 'created' });
 							});
 						});
 					}
 					else
-						res.send({status:'not login'});
+						res.send({ status: 'not login' });
 				});
 			}
 		});
