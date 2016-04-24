@@ -45,8 +45,6 @@ module.exports = function(app, passport){
 			if(err){
 				res.send(err);
 			}
-
-			console.log(group+' >>><<< ');
 			res.render('home',{user:req.user, group_name:group});	
 		});
 	});

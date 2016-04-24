@@ -5,6 +5,7 @@ var port = 8081;
 
 var mongoose = require('mongoose');
 var Message = require('./models/message.js');
+var Group =require('./models/group.js');
 
 mongoose.connect("mongodb://localhost:27017/irisDB");
 
@@ -14,12 +15,20 @@ var server = app.listen(port, function () {
 
 var io = require('socket.io').listen(server);
 io.on('connection',function(socket){
-    socket.on('chat', function(message) {
-        io.emit('chat', message);
-        //save here
-        // var text = new message(); 
-    	console.log("MESSAGE IS HERE");
-        console.dir(message);
+    socket.on('subscribe', function(group) { 
+        console.log('joining group', group);
+        socket.join(group); 
+    });
+
+    socket.on('unsubscribe', function(group) {  
+        console.log('leaving group', group);
+        socket.leave(group); 
+    });
+
+    socket.on('send', function(data) {
+        console.log('sending message');
+        console.log(data);
+        io.sockets.in(data.group).emit('chat', { 'kry':data.user, 'message':data.message });
     });
 });
 

@@ -8,14 +8,19 @@ block content
         script(src="https://cdn.socket.io/socket.io-1.3.3.js")
         script(src="https://code.jquery.com/jquery-2.1.3.min.js")
         script.
+
             var socket = io();
+            socket.emit('subscribe', '#{group.name}');
+
+
             // เมื่อ form ถูก submit ให้ทำอะไร? 
             $('#chat-form').submit(function() {
                 // ส่งข้อความที่พิมพ์มาไปยัง server ผ่านทางท่อชื่อ "chat"
-                socket.emit('chat', {'message':$('#chat-message').val(),'kry':'#{user.name}'});
+                socket.emit('send', {message:$('#chat-message').val(),group:'#{group.name}',user:'#{user.name}'});
                 $('#chat-message').val('').focus();
                 return false;
             });
+
             socket.on('chat', function(message) {
                 // แสดงผลข้อความที่ได้มาออกมาทางหน้าจอ
                 if(message.kry != '#{user.name}')
