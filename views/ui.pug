@@ -28,7 +28,7 @@ html
                     div.message-title
                         span #{groupName}
                         if joinedStatus
-                            a.pull-right(href="", data-toggle="tooltip", data-placement="left", title="Leave this conversation")
+                            a.pull-right(href="leave/group?group_name="+groupName, data-toggle="tooltip", data-placement="left", title="Leave this conversation")
                                 span.glyphicon.glyphicon-log-out
             if groupName && joinedStatus
                 div.row.ui-textbox

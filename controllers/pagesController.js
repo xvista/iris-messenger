@@ -4,7 +4,7 @@ var User = require('../models/user');
 var Group = require('../models/group');
 var Message = require('../models/message');
 module.exports = function (app, passport) {
-    app.get('/', function (req, res) {
+    router.get('/', function (req, res) {
 		if (!req.user)
 			res.redirect('login');
 		Group.find(function (err, groups) {
@@ -86,10 +86,10 @@ module.exports = function (app, passport) {
 					if (idx >= 0)
 						res.redirect('/?groupName='+req.body.group_name);
 					else{
-						group.users.push(user);
+						group.users.push(req.user._id);
 						group.save(function (err) {
-							user.groups.push(group);
-							user.save(function (err) {
+							req.user.groups.push(group);
+							req.user.save(function (err) {
 								res.redirect('/?groupName='+req.body.group_name);
 							});
 						});
@@ -99,71 +99,19 @@ module.exports = function (app, passport) {
 					res.redirect('/');
 			});
     });
-	router.post('/leave/group/', function (req, res) {
+	router.get('/leave/group/', function (req, res) {
 		if(!req.user)
-			res.redirect('/');
-		Group.findOne({ 'name': req.body.group_name }, function (err, group) {
+			res.redirect('/login');
+		Group.findOne({ 'name': req.query.group_name }, function (err, group) {
 			if (group) {
 				var idx = group.users.indexOf(req.user._id);
 				group.users.splice(idx, 1);
 				group.save(function (err) {
-					res.redirect('/');
+					res.redirect('/?groupName='+req.query.group_name);
 				});
 			}
 			else
 				res.redirect('/');
-		});
-	});
-	
-    //list user's group
-    router.get('/getusergroup', function (req, res) {
-		User.findOne({ 'username': req.user.username }, function (err, user) {
-			if (err) {
-				res.send(err);
-			}
-			if (user) {
-				Group.find({ '_id': { $in: user.groups } }, { name: 1, _id: 0 }, function (err, groups) {
-					user.groups = groups;
-					res.send(user.groups);
-				});
-			}
-		});
-    });
-
-    //list all group
-    router.get('/getallgroup', function (req, res) {
-		Group.find({}, { name: 1, _id: 0 }, function (err, groups) {
-			res.send(groups);
-		});
-    });
-
-    router.get('/group/:group_name', function (req, res) {
-        console.log(req.params.group_name);
-		Group.findOne({ 'name': req.params.group_name }, function (err, group) {
-            if (err) {
-
-                res.send(err);
-            }
-            if (group) {
-                User.findOne({ 'username': req.user.username }, function (err, user) {
-                    if (err) {
-                        res.send(err);
-                    }
-                    if (user) {
-                        var idx = group.users.indexOf(user._id);
-                        if (idx >= 0)
-                            res.render('chat', { user: user, group: group, message: group.messages });
-                        else
-                            res.send("User isn't exist in this group");
-                    }
-                    else {
-                        res.send("User is not found.")
-                    }
-                });
-            }
-            else {
-                res.send("Sorry. This group has been closed.");
-			}
 		});
 	});
 	return router;
