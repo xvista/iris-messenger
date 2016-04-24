@@ -10,57 +10,99 @@ html
             div.row.ui-title
                 span(class="glyphicon glyphicon-comment icon-iris")
                 |  Iris Messenger
-            div.row
-                div.col-md-6.panel
-                    div.row
-                        div.col-md-3.panel-friend Hey
-                        div.col-md-3.panel-conversation
-                            ul.nav.conversation-list
-                                li.ui-title.conversation-title Conversations
-                                li
-                                    a(href="#")
-                                        span.group-name Group Name
-                                        span.group-recent Recent Message
-                                li
-                                    a(href="#")
-                                        span.group-name Group Name
-                                        span.group-recent Recent Message
-                                li
-                                    a(href="#")
-                                        span.group-name Group Name
-                                        span.group-recent Recent Message
-                                li
-                                    a(href="#")
-                                        span.group-name Group Name
-                                        span.group-recent Recent Message
-                div.col-md-6.message-box
-                    div.ui-title.message-box-title คุนชาeตู่za
-                    div.message-textbox
-                    div.message.message-friend
-                        img.message-picture(style="background-image:url('http://www.newsplus.co.th/images/2014/12/419403585.jpg')")
-                        span.message-sender คุนชาeตู่za
-                        span.message-text อะไรของมึงวะปั๊ดโธ่
-                    div.message.message-me
-                        img.message-picture
-                        span.message-sender Me
-                        span.message-text อูย
-                    div.message.message-me
-                        img.message-picture
-                        span.message-sender Me
-                        span.message-text กลัวแล้วพี่
-                    div.message.message-friend
-                        img.message-picture(style="background-image:url('http://www.newsplus.co.th/images/2014/12/419403585.jpg')")
-                        span.message-sender คุนชาeตู่za
-                        span.message-text ลงไปซื้อมาม่าผัดได้แล้ว
-                    div.message.message-friend
-                        img.message-picture(style="background-image:url('http://www.newsplus.co.th/images/2014/12/419403585.jpg')")
-                        span.message-sender คุนชาeตู่za
-                        span.message-text หิว
-                    div.message.message-me
-                        img.message-picture
-                        span.message-sender Me
-                        span.message-text ครับ
-            div.row
+            div.row.ui-subtitle
+                div.conversation-title
+                    span Conversations
+                    a.pull-right(href="")
+                        span.glyphicon.glyphicon-plus
+                div.message-title
+                    span Group Name
+                    a.pull-right(href="")
+                        span.glyphicon.glyphicon-log-out
+            div.row.ui-textbox
+                form#message-text-form
+                    input.form-control(type="text", placeholder="Enter your message (press Enter to send)")
+                    button(type="submit")
+                        span.glyphicon.glyphicon-send
+            div.panel-conversation
+                ul.nav.conversation-list
+                    li
+                        a(href="#")
+                            span.group-name Group Name
+                            span.group-recent 5 users in this conversation
+                    li
+                        a(href="#")
+                            span.group-name Group Name
+                            span.group-recent Recent Message
+                    li
+                        a(href="#")
+                            span.group-name Group Name
+                            span.group-recent Recent Message
+                    li
+                        a(href="#")
+                            span.group-name Group Name
+                            span.group-recent Recent Message
+            div.message-box-new
+                div.message.message-friend
+                    span.message-sender คุนชาeตู่za
+                    span.message-text อะไรของมึงวะปั๊ดโธ่
+                div.message.message-me
+                    span.message-sender Me
+                    span.message-text อูย
+                div.message.message-me
+                    span.message-sender Me
+                    span.message-text กลัวแล้วพี่
+                div.message.message-friend
+                    span.message-sender คุนชาeตู่za
+                    span.message-text ลงไปซื้อมาม่าผัดได้แล้ว
+                div.message.message-friend
+                    span.message-sender คุนชาeตู่za
+                    span.message-text หิว
+                div.message.message-me
+                    span.message-sender Me
+                    span.message-text ครับ
+            // div.row
+            //     div.col-xs-3.panel.panel-conversation
+            //         ul.nav.conversation-list
+            //             li
+            //                 a(href="#")
+            //                     span.group-name Group Name
+            //                     span.group-recent 5 users in this conversation
+            //             li
+            //                 a(href="#")
+            //                     span.group-name Group Name
+            //                     span.group-recent Recent Message
+            //             li
+            //                 a(href="#")
+            //                     span.group-name Group Name
+            //                     span.group-recent Recent Message
+            //             li
+            //                 a(href="#")
+            //                     span.group-name Group Name
+            //                     span.group-recent Recent Message
+            //     div.col-xs-9.message-box
+            //         div.message-textbox
+            //                     input.form-control(type="text", placeholder="Enter your message (press Enter to send)")
+            //         div.message-feed
+            //             div.message.message-friend
+            //                 span.message-sender คุนชาeตู่za
+            //                 span.message-text อะไรของมึงวะปั๊ดโธ่
+            //             div.message.message-me
+            //                 span.message-sender Me
+            //                 span.message-text อูย
+            //             div.message.message-me
+            //                 span.message-sender Me
+            //                 span.message-text กลัวแล้วพี่
+            //             div.message.message-friend
+            //                 span.message-sender คุนชาeตู่za
+            //                 span.message-text ลงไปซื้อมาม่าผัดได้แล้ว
+            //             div.message.message-friend
+            //                 span.message-sender คุนชาeตู่za
+            //                 span.message-text หิว
+            //             div.message.message-me
+            //                 span.message-sender Me
+            //                 span.message-text ครับ
+            //div.row
                 div.col-md-6
                 div.c0l-md-6
                     form#chat-form(action="")

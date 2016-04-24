@@ -13,10 +13,84 @@ html, body {
     text-align: center;
     padding: 15px;
     border-bottom: 1px solid #eee;
+    position: fixed;
+    width: 100%;
+    z-index: 1000;
+    background-color: #fff;
 }
-
 .ui-title > span.icon-iris {
     font-size: 0.85em;
+}
+
+.ui-subtitle {
+    font-size: 1.25em;
+    text-align: center;
+    position: fixed;
+    width: 100%;
+    background-color: #fff;
+    top: 56px;
+    z-index: 1000;
+}
+.ui-subtitle > div {
+    position: absolute;
+    border-bottom: 1px solid #eee;
+    padding: 10px;
+    z-index: 1000;
+    background-color: #fff;
+}
+.ui-subtitle > .conversation-title {
+    left: 0;
+    width: 330px;
+    border-right: 1px solid #eee;
+}
+.ui-subtitle > .message-title {
+    left: 330px;
+    right: 0;
+    border-right: 1px solid #eee;
+}
+.ui-subtitle .pull-right {
+    position: absolute;
+    right: 10px;
+}
+
+@media screen and (max-width: 768px) {
+    .ui-subtitle > .conversation-title {
+        width: 200px;
+    }
+    .ui-subtitle > .message-title {
+        left: 200px;
+    }
+}
+
+.ui-textbox {
+    position: fixed;
+    bottom: 0;
+    left: 330px;
+    right: 0;
+    border-top: 1px solid #eee;
+    margin: 0;
+}
+.ui-textbox input.form-control {
+    padding: 10px 12px;
+    height: auto;
+    box-shadow: none;
+    border-radius: 0;
+    border: 0;
+    padding-right: 45px;
+}
+.ui-textbox button[type='submit'] {
+    position: fixed;
+    right: 8px;
+    bottom: 5px;
+    background-color: transparent;
+    border: 0;
+    font-size: 1.25em;
+}
+
+@media screen and (max-width: 768px) {
+    .ui-textbox {
+        left: 200px;
+    }
 }
 
 .panel > .row {
@@ -35,22 +109,29 @@ html, body {
     height: 100%;
     position: fixed;
     width: 330px;
-    top: 56px;
+    top: 102px;
     bottom: 0;
-    left: 330px;
+    left: 0;
     z-index: 1000;
     display: block;
-    padding: 20px;
+    padding: 0;
+    padding-top: 0;
     overflow-x: hidden;
     overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
     background-color: #fff;
     border-right: 1px solid #eee;
 }
 
+@media screen and (max-width: 768px) {
+    .panel-conversation {
+        width: 200px;
+    }
+}
+
 .conversation-list {
-    margin-right: -21px; /* 20px padding + 1px border */
-    margin-bottom: 20px;
-    margin-left: -20px;
+    /*margin-right: -21px;*/ /* 20px padding + 1px border */
+    margin-bottom: 55px;
+    /*margin-left: -20px;*/
 }
 .conversation-list > li {
     border-bottom: 1px solid #eee;
@@ -75,32 +156,20 @@ html, body {
     font-size: small;
 }
 
-.conversation-title {
-    display: block;
-    text-align: center;
-}
-
 /*
   ========== MESSAGE BOX ===============  
 */
 
 .message-box {
-    height: 100%;
-    position: fixed;
-    top: 56px;
-    bottom: 0;
-    left: 660px;
-    right: 0;
-    z-index: 1000;
-    display: block;
-    padding: 20px;
-    overflow-x: hidden;
-    overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
-    background-color: #fff;
+    margin-left: 330px;
+    margin-top: 116px;
+    margin-bottom: 65px;
 }
 
-.message-box-title {
-    border-bottom: 1px solid #eee;
+@media screen and (max-width: 768px) {
+    .message-box {
+        margin-left: 200px;
+    }
 }
 
 .message {
@@ -154,24 +223,4 @@ html, body {
     background: #aaa;
     padding: 8px 10px;
     border-radius: 15px;
-}
-
-/*
-  ========== PANEL ===============  
-*/
-
-.panel-friend {
-    height: 100%;
-    position: fixed;
-    width: 330px;
-    top: 56px;
-    bottom: 0;
-    left: 0;
-    z-index: 1000;
-    display: block;
-    padding: 20px;
-    overflow-x: hidden;
-    overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
-    background-color: #fff;
-    border-right: 1px solid #eee;
 }
