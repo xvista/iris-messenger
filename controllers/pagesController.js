@@ -99,15 +99,15 @@ module.exports = function (app, passport) {
 					res.redirect('/');
 			});
     });
-	router.post('/leave/group/', function (req, res) {
+	router.get('/leave/group/', function (req, res) {
 		if(!req.user)
-			res.redirect('/');
-		Group.findOne({ 'name': req.body.group_name }, function (err, group) {
+			res.redirect('/login');
+		Group.findOne({ 'name': req.query.group_name }, function (err, group) {
 			if (group) {
 				var idx = group.users.indexOf(req.user._id);
 				group.users.splice(idx, 1);
 				group.save(function (err) {
-					res.redirect('/');
+					res.redirect('/?groupName='+req.query.group_name);
 				});
 			}
 			else
