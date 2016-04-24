@@ -23,7 +23,7 @@ module.exports = function (app, passport) {
 								});
 							});
 							Promise.all(promises).then(function () {
-								res.render('ui', { allGroup: groups.sort({ updatedAt: -1 }), groupName: req.query.groupName, message: group.messages });
+								res.render('ui', { allGroup: groups.sort({ updatedAt: -1 }), groupName: req.query.groupName, messages: group.messages });
 							});
 						}
 						else
