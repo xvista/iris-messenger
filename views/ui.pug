@@ -1,6 +1,10 @@
 -function toDD(dateString){
     -var date = new Date(dateString);
-    -return date.toDateString()+' '+date.getHours()+':'+date.getMinutes()+':'+date.getSeconds();
+    -var m = date.getMinutes().toString();
+    -if (m.length == 1) m = '0' + m;
+    -var s = date.getSeconds().toString();
+    -if (s.length == 1) s = '0' + s;
+    -return date.toDateString()+' '+date.getHours()+':'+m+':'+s;
 -}
 
 doctype html
@@ -17,7 +21,8 @@ html
     body
         div.container-fluid
             div.row.ui-title
-                span(class="glyphicon glyphicon-comment icon-iris")
+                // span(class="glyphicon glyphicon-comment icon-iris")
+                img.rainbow(src="img/iris-rainbow.png")
                 |  Iris Messenger
                 p.pull-right
                     span.username #{user.name}

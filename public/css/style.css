@@ -268,3 +268,9 @@ html, body {
 .tooltip {
     z-index: 2000;
 }
+
+.rainbow {
+    height: 16px;
+    width: auto;
+    margin-top: -5px;
+}
